@@ -8,5 +8,11 @@ describe('/games', () => {
 
       expect(res.status).toBe(200);
     });
+
+    it('should always return an array', async () => {
+      const res = await request(server).get('/games');
+
+      expect(res.body).toBeInstanceOf(Array)
+    });
   });
 });
