@@ -16,6 +16,35 @@ describe("/games", () => {
     });
   });
 
+  describe("GET /:id", async () => {
+    it("should return a single game", async () => {
+      // create one game
+      const valid = {
+        title: "Afffzz", // required
+        genre: "Arcade",
+      };
+      await request(server)
+        .post("/games")
+        .send(valid);
+
+      // get game 1
+      const res = await request(server).get("/games/1");
+
+      const expected = {
+        title: "Afffzz", // required
+        genre: "Arcade",
+        id: 1 // required
+      };
+
+      expect(res.body).toEqual(expected);
+    });
+    it("should return 404 when not found", async () => {
+      const res = await request(server).get("/games/2");
+
+      expect(res.status).toBe(404);
+    });
+  });
+
   describe("POST /", () => {
     it("should validate required fields inside the req body, and return 422 for incomplete information", async () => {
       const valid = {
@@ -25,22 +54,29 @@ describe("/games", () => {
 
       const invalid = {};
 
-      const res = await request(server).post("/games").send(invalid);
+      const res = await request(server)
+        .post("/games")
+        .send(invalid);
       expect(res.status).toBe(422);
 
-      const validRes = await request(server).post("/games").send(valid);
+      const validRes = await request(server)
+        .post("/games")
+        .send(valid);
       expect(validRes.status).toBe(201);
     });
-    it('should validate unqiue title', async () => {
-
+    it("should validate unqiue title", async () => {
       const duplicate = {
         title: "Pacman", // required
         genre: "Arcade" // required
       };
 
-      await request(server).post("/games").send(duplicate);
+      await request(server)
+        .post("/games")
+        .send(duplicate);
 
-      const validRes = await request(server).post("/games").send(duplicate);
+      const validRes = await request(server)
+        .post("/games")
+        .send(duplicate);
       expect(validRes.status).toBe(405);
     });
   });

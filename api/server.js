@@ -4,12 +4,20 @@ const server = express();
 
 const games = [];
 
-let id = 0;
+let id = 1;
 
 server.use(express.json());
 
 server.get("/games", (req, res) => {
   res.status(200).json(games);
+});
+
+server.get("/games/:id", async (req, res) => {
+  if (games[req.params.id - 1]) {
+    res.status(200).json(games[req.params.id - 1]);
+  } else {
+    res.status(404).json({ error: "Game not found" });
+  }
 });
 
 server.post("/games", (req, res) => {
