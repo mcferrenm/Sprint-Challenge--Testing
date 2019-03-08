@@ -31,5 +31,17 @@ describe("/games", () => {
       const validRes = await request(server).post("/games").send(valid);
       expect(validRes.status).toBe(201);
     });
+    it('should validate unqiue title', async () => {
+
+      const duplicate = {
+        title: "Pacman", // required
+        genre: "Arcade" // required
+      };
+
+      await request(server).post("/games").send(duplicate);
+
+      const validRes = await request(server).post("/games").send(duplicate);
+      expect(validRes.status).toBe(405);
+    });
   });
 });
