@@ -4,6 +4,8 @@ const server = express();
 
 const games = [];
 
+let id = 0;
+
 server.use(express.json());
 
 server.get("/games", (req, res) => {
@@ -19,8 +21,14 @@ server.post("/games", (req, res) => {
         return res.status(405).json({ error: "Duplicate title" });
       }
     }
-    games.push(req.body);
+    const payload = {
+      ...req.body,
+      id
+    };
+    games.push(payload);
     res.status(201).json(games);
+
+    id++;
   }
 });
 
