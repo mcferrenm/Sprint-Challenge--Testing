@@ -20,6 +20,16 @@ server.get("/games/:id", async (req, res) => {
   }
 });
 
+server.delete("/games/:id", async (req, res) => {
+  if (games[req.params.id - 1]) {
+    games.splice(req.params.id - 1, 1);
+    games[req.params.id - 1];
+    res.status(204).end();
+  } else {
+    res.status(404).json({ error: "Game not found" });
+  }
+});
+
 server.post("/games", (req, res) => {
   if (!req.body.title || !req.body.genre) {
     res.status(422).json({ error: "Must contain title and genre" });

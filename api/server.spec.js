@@ -80,4 +80,36 @@ describe("/games", () => {
       expect(validRes.status).toBe(405);
     });
   });
+  describe('DELETE /:id', () => {
+    it('should remove game from server', async () => {
+      // create one game
+      const valid = {
+        title: "Afffzz", // required
+        genre: "Arcade",
+      };
+      await request(server)
+        .post("/games")
+        .send(valid);
+      
+      // delete request
+      await request(server).delete("/games/1")
+
+      // check if its on server
+      const res = await request(server).get("/games/1");
+
+      const expected = {
+        title: "Afffzz", // required
+        genre: "Arcade",
+        id: 1 // required
+      };
+
+      expect(res.body).not.toEqual(expected);
+
+    });
+    it("should return 404 when not found", async () => {
+      const res = await request(server).delete("/games/23123");
+
+      expect(res.status).toBe(404);
+    });
+  });
 });
